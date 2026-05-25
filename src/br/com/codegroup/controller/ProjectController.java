@@ -29,7 +29,7 @@ public class ProjectController {
     @Operation(summary = "Criar projeto")
     public ResponseEntity<ProjectResponseDto> create(@Valid @RequestBody ProjectRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(projectMapper.toResponse(projectService.create(projectMapper.toEntity(dto))));
+                .body(projectService.toResponseWithRisk(projectService.create(projectMapper.toEntity(dto))));
     }
 
     @GetMapping
@@ -45,7 +45,7 @@ public class ProjectController {
     @GetMapping("/{id}")
     @Operation(summary = "Buscar projeto por ID")
     public ResponseEntity<ProjectResponseDto> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(projectMapper.toResponse(projectService.findById(id)));
+        return ResponseEntity.ok(projectService.toResponseWithRisk(projectService.findById(id)));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +54,7 @@ public class ProjectController {
             @PathVariable Long id,
             @Valid @RequestBody ProjectRequestDto dto) {
         return ResponseEntity.ok(
-                projectMapper.toResponse(projectService.update(id, projectMapper.toEntity(dto))));
+                projectService.toResponseWithRisk(projectService.update(id, projectMapper.toEntity(dto))));
     }
 
     @DeleteMapping("/{id}")
@@ -70,7 +70,7 @@ public class ProjectController {
             @PathVariable Long id,
             @Valid @RequestBody StatusUpdateRequestDto dto) {
         return ResponseEntity.ok(
-                projectMapper.toResponse(projectService.updateStatus(id, dto.getStatus())));
+                projectService.toResponseWithRisk(projectService.updateStatus(id, dto.getStatus())));
     }
 
     @PostMapping("/{id}/members")
@@ -79,7 +79,7 @@ public class ProjectController {
             @PathVariable Long id,
             @Valid @RequestBody MemberIdRequestDto dto) {
         return ResponseEntity.ok(
-                projectMapper.toResponse(projectService.addMember(id, dto.getMemberId())));
+                projectService.toResponseWithRisk(projectService.addMember(id, dto.getMemberId())));
     }
 
     @DeleteMapping("/{id}/members/{memberId}")
@@ -88,6 +88,6 @@ public class ProjectController {
             @PathVariable Long id,
             @PathVariable Long memberId) {
         return ResponseEntity.ok(
-                projectMapper.toResponse(projectService.removeMember(id, memberId)));
+                projectService.toResponseWithRisk(projectService.removeMember(id, memberId)));
     }
 }

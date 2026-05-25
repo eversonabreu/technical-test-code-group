@@ -1,19 +1,17 @@
 package br.com.codegroup.entity;
 
 import br.com.codegroup.enums.ProjectStatus;
-import br.com.codegroup.enums.RiskLevel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -74,26 +72,4 @@ public class Project {
     )
     @Builder.Default
     private List<Member> members = new ArrayList<>();
-
-    @Transient
-    public RiskLevel getRiskLevel() {
-        RiskLevel budgetRisk = calculateBudgetRisk();
-        RiskLevel durationRisk = calculateDurationRisk();
-        return budgetRisk.ordinal() >= durationRisk.ordinal() ? budgetRisk : durationRisk;
-    }
-
-    private RiskLevel calculateBudgetRisk() {
-        if (totalBudget == null) return RiskLevel.BAIXO;
-        if (totalBudget.compareTo(new BigDecimal("100000")) <= 0) return RiskLevel.BAIXO;
-        if (totalBudget.compareTo(new BigDecimal("500000")) <= 0) return RiskLevel.MEDIO;
-        return RiskLevel.ALTO;
-    }
-
-    private RiskLevel calculateDurationRisk() {
-        if (startDate == null || expectedEndDate == null) return RiskLevel.BAIXO;
-        long months = ChronoUnit.MONTHS.between(startDate, expectedEndDate);
-        if (months <= 3) return RiskLevel.BAIXO;
-        if (months <= 6) return RiskLevel.MEDIO;
-        return RiskLevel.ALTO;
-    }
 }

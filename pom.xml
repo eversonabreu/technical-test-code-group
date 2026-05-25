@@ -134,6 +134,17 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>br/com/codegroup/constants/**</exclude>
+                        <exclude>br/com/codegroup/config/**</exclude>
+                        <exclude>br/com/codegroup/dto/**</exclude>
+                        <exclude>br/com/codegroup/mapper/**</exclude>
+                        <exclude>br/com/codegroup/controller/**</exclude>
+                        <exclude>br/com/codegroup/exception/**</exclude>
+                        <exclude>br/com/codegroup/PortfolioManagerApplication*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>

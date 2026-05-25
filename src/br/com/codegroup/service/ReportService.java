@@ -1,13 +1,13 @@
 package br.com.codegroup.service;
 
 import br.com.codegroup.dto.PortfolioReportDto;
+import br.com.codegroup.entity.Member;
 import br.com.codegroup.entity.Project;
 import br.com.codegroup.enums.ProjectStatus;
 import br.com.codegroup.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -43,7 +43,7 @@ public class ReportService {
 
         long uniqueMembers = allProjects.stream()
                 .flatMap(p -> p.getMembers().stream())
-                .map(m -> m.getId())
+                .map(Member::getId)
                 .distinct()
                 .count();
 

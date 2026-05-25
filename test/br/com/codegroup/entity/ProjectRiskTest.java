@@ -1,6 +1,8 @@
 package br.com.codegroup.entity;
 
 import br.com.codegroup.enums.RiskLevel;
+import br.com.codegroup.service.ProjectRiskCalculator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -9,78 +11,109 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ProjectRiskTest {
+class ProjectRiskCalculatorTest {
+
+    private ProjectRiskCalculator calculator;
+
+    @BeforeEach
+    void setUp() {
+        calculator = new ProjectRiskCalculator();
+    }
+
+    // ── Risco por orçamento ──────────────────────────────────────────────────
 
     @Test
     @DisplayName("Deve retornar BAIXO para orçamento <= 100k e prazo <= 3 meses")
-    void getRiskLevel_deveBaixo_quandoOrcamentoBaixoEPrazoCurto() {
-        Project project = Project.builder()
-                .totalBudget(new BigDecimal("80000"))
-                .startDate(LocalDate.now())
-                .expectedEndDate(LocalDate.now().plusMonths(2))
-                .build();
-
-        assertThat(project.getRiskLevel()).isEqualTo(RiskLevel.BAIXO);
+    void calculate_deveBaixo_quandoOrcamentoBaixoEPrazoCurto() {
+        RiskLevel result = calculator.calculate(
+                new BigDecimal("80000"),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(2)
+        );
+        assertThat(result).isEqualTo(RiskLevel.BAIXO);
     }
 
     @Test
     @DisplayName("Deve retornar MEDIO para orçamento entre 100k e 500k")
-    void getRiskLevel_deveMedio_quandoOrcamentoMedio() {
-        Project project = Project.builder()
-                .totalBudget(new BigDecimal("200000"))
-                .startDate(LocalDate.now())
-                .expectedEndDate(LocalDate.now().plusMonths(2))
-                .build();
-
-        assertThat(project.getRiskLevel()).isEqualTo(RiskLevel.MEDIO);
+    void calculate_deveMedio_quandoOrcamentoMedio() {
+        RiskLevel result = calculator.calculate(
+                new BigDecimal("200000"),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(2)
+        );
+        assertThat(result).isEqualTo(RiskLevel.MEDIO);
     }
 
     @Test
     @DisplayName("Deve retornar ALTO para orçamento > 500k")
-    void getRiskLevel_deveAlto_quandoOrcamentoAlto() {
-        Project project = Project.builder()
-                .totalBudget(new BigDecimal("600000"))
-                .startDate(LocalDate.now())
-                .expectedEndDate(LocalDate.now().plusMonths(2))
-                .build();
-
-        assertThat(project.getRiskLevel()).isEqualTo(RiskLevel.ALTO);
+    void calculate_deveAlto_quandoOrcamentoAlto() {
+        RiskLevel result = calculator.calculate(
+                new BigDecimal("600000"),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(2)
+        );
+        assertThat(result).isEqualTo(RiskLevel.ALTO);
     }
+
+    // ── Risco por duração ────────────────────────────────────────────────────
 
     @Test
     @DisplayName("Deve retornar MEDIO para prazo entre 3 e 6 meses")
-    void getRiskLevel_deveMedio_quandoPrazoMedio() {
-        Project project = Project.builder()
-                .totalBudget(new BigDecimal("50000"))
-                .startDate(LocalDate.now())
-                .expectedEndDate(LocalDate.now().plusMonths(4))
-                .build();
-
-        assertThat(project.getRiskLevel()).isEqualTo(RiskLevel.MEDIO);
+    void calculate_deveMedio_quandoPrazoMedio() {
+        RiskLevel result = calculator.calculate(
+                new BigDecimal("50000"),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(4)
+        );
+        assertThat(result).isEqualTo(RiskLevel.MEDIO);
     }
 
     @Test
     @DisplayName("Deve retornar ALTO para prazo superior a 6 meses")
-    void getRiskLevel_deveAlto_quandoPrazoLongo() {
-        Project project = Project.builder()
-                .totalBudget(new BigDecimal("50000"))
-                .startDate(LocalDate.now())
-                .expectedEndDate(LocalDate.now().plusMonths(8))
-                .build();
+    void calculate_deveAlto_quandoPrazoLongo() {
+        RiskLevel result = calculator.calculate(
+                new BigDecimal("50000"),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(8)
+        );
+        assertThat(result).isEqualTo(RiskLevel.ALTO);
+    }
 
-        assertThat(project.getRiskLevel()).isEqualTo(RiskLevel.ALTO);
+    // ── Conflito entre riscos ────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Deve retornar o maior risco quando orçamento e prazo divergem")
+    void calculate_deveRetornarMaiorRisco_quandoConflito() {
+        // Budget BAIXO, prazo ALTO → resultado deve ser ALTO
+        RiskLevel result = calculator.calculate(
+                new BigDecimal("50000"),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(8)
+        );
+        assertThat(result).isEqualTo(RiskLevel.ALTO);
+    }
+
+    // ── Valores nulos ────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Deve retornar BAIXO quando orçamento é nulo")
+    void calculate_deveBaixo_quandoOrcamentoNulo() {
+        RiskLevel result = calculator.calculate(
+                null,
+                LocalDate.now(),
+                LocalDate.now().plusMonths(2)
+        );
+        assertThat(result).isEqualTo(RiskLevel.BAIXO);
     }
 
     @Test
-    @DisplayName("Deve retornar o maior risco entre orçamento e prazo")
-    void getRiskLevel_deveRetornarMaiorRisco_quandoConflito() {
-        // Budget BAIXO, prazo ALTO → resultado deve ser ALTO
-        Project project = Project.builder()
-                .totalBudget(new BigDecimal("50000"))
-                .startDate(LocalDate.now())
-                .expectedEndDate(LocalDate.now().plusMonths(8))
-                .build();
-
-        assertThat(project.getRiskLevel()).isEqualTo(RiskLevel.ALTO);
+    @DisplayName("Deve retornar BAIXO quando datas são nulas")
+    void calculate_deveBaixo_quandoDatasNulas() {
+        RiskLevel result = calculator.calculate(
+                new BigDecimal("50000"),
+                null,
+                null
+        );
+        assertThat(result).isEqualTo(RiskLevel.BAIXO);
     }
 }

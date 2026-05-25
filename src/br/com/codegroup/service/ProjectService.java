@@ -23,6 +23,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final ProjectMapper projectMapper;
+    private final RiskCalculator riskCalculator;
 
     @Transactional
     public Project create(Project project) {
@@ -53,7 +54,7 @@ public class ProjectService {
             page = projectRepository.findAll(pageable);
         }
 
-        return page.map(projectMapper::toResponse);
+        return page.map(this::toResponseWithRisk);
     }
 
     @Transactional
@@ -131,5 +132,15 @@ public class ProjectService {
             throw new BusinessException("Membro não está alocado neste projeto.");
         }
         return projectRepository.save(project);
+    }
+
+    public ProjectResponseDto toResponseWithRisk(Project project) {
+        ProjectResponseDto dto = projectMapper.toResponse(project);
+        dto.setRiskLevel(riskCalculator.calculate(
+                project.getTotalBudget(),
+                project.getStartDate(),
+                project.getExpectedEndDate()
+        ));
+        return dto;
     }
 }

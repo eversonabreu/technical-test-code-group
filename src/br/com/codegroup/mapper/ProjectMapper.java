@@ -16,11 +16,9 @@ public interface ProjectMapper {
     @Mapping(target = "manager", expression = "java(memberStub(dto.getManagerId()))")
     Project toEntity(ProjectRequestDto dto);
 
-    @Mapping(target = "riskLevel", expression = "java(project.getRiskLevel())")
+    @Mapping(target = "riskLevel", expression = "java(project.getRiskLevel())", ignore = true)
     ProjectResponseDto toResponse(Project project);
 
-    // Cria um Member com apenas o ID preenchido.
-    // O service vai recarregar o registro completo do banco antes de salvar.
     default Member memberStub(Long id) {
         if (id == null) return null;
         Member member = new Member();
