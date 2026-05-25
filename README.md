@@ -285,8 +285,7 @@ Navegue até essa pasta no Windows Explorer e abra o arquivo no navegador. O rel
 
 | Pacote | Cobertura |
 |--------|-----------|
-| `service` | **85%** ✅ |
-| `entity` | **94%** ✅ |
+| `service` | **84%** ✅ |
 | `enums` | **98%** ✅ |
 
 ---
