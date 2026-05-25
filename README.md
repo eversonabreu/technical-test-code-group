@@ -42,7 +42,7 @@ Antes de rodar a aplicação, certifique-se de ter instalado:
 Conecte-se ao PostgreSQL com seu cliente preferido (psql, pgAdmin, DBeaver, etc.) e execute:
 
 ```sql
-CREATE DATABASE "db-code-group";
+CREATE DATABASE "db-portfolio";
 ```
 
 > O banco precisa estar criado antes de subir a aplicação. O schema (tabelas, índices) é criado automaticamente pelo **Flyway** na primeira inicialização.
@@ -54,7 +54,7 @@ As credenciais de acesso ao banco ficam no arquivo `resources/application-local.
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/db-code-group
+    url: jdbc:postgresql://localhost:5432/db-portfolio
     username: postgres
     password: admin
 ```
@@ -85,14 +85,14 @@ Sobrescreve as configurações base com valores específicos para desenvolviment
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/db-code-group
+    url: jdbc:postgresql://localhost:5432/db-portfolio
     username: postgres      # altere para o seu usuário
     password: admin         # altere para a sua senha
   jpa:
     show-sql: true          # exibe as queries no console
 logging:
   level:
-    br.com.codegroup: DEBUG
+    br.com.portfolio: DEBUG
     org.hibernate.SQL: DEBUG
 ```
 
@@ -106,7 +106,7 @@ logging:
 
 1. Abra o projeto no IntelliJ: **File → Open** → selecione a pasta raiz do projeto
 2. Aguarde o IntelliJ indexar o projeto e baixar as dependências Maven
-3. Abra o arquivo `src/br/com/codegroup/PortfolioManagerApplication.java`
+3. Abra o arquivo `src/br/com/portfolio/PortfolioManagerApplication.java`
 4. Clique no ícone ▶ verde na margem esquerda, ao lado do método `main`
 5. Selecione **Run 'PortfolioManagerApplication'**
 
@@ -267,7 +267,7 @@ GET /api/reports/portfolio
 
 ## Cobertura de Testes (JaCoCo)
 
-O projeto exige **mínimo de 70% de cobertura de linhas** nas classes de serviço (`br.com.codegroup.service`).
+O projeto exige **mínimo de 70% de cobertura de linhas** nas classes de serviço (`br.com.portfolio.service`).
 
 ### Como gerar e visualizar o relatório
 
@@ -294,9 +294,9 @@ Navegue até essa pasta no Windows Explorer e abra o arquivo no navegador. O rel
 ## Estrutura do Projeto
 
 ```
-technical-test-code-group/
+technical-test-portfolio/
 ├── src/
-│   └── br/com/codegroup/
+│   └── br/com/portfolio/
 │       ├── PortfolioManagerApplication.java
 │       ├── config/
 │       │   ├── SecurityConfig.java
@@ -335,7 +335,7 @@ technical-test-code-group/
 │           ├── ProjectService.java
 │           └── ReportService.java
 ├── test/
-│   └── br/com/codegroup/
+│   └── br/com/portfolio/
 │       ├── entity/
 │       │   └── ProjectRiskTest.java
 │       ├── enums/

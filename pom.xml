@@ -10,7 +10,7 @@
         <version>3.4.1</version>
         <relativePath/>
     </parent>
-    <groupId>br.com.codegroup</groupId>
+    <groupId>br.com.portfolio</groupId>
     <artifactId>portfolio-manager</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
@@ -136,13 +136,13 @@
                 <version>${jacoco.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>br/com/codegroup/constants/**</exclude>
-                        <exclude>br/com/codegroup/config/**</exclude>
-                        <exclude>br/com/codegroup/dto/**</exclude>
-                        <exclude>br/com/codegroup/mapper/**</exclude>
-                        <exclude>br/com/codegroup/controller/**</exclude>
-                        <exclude>br/com/codegroup/exception/**</exclude>
-                        <exclude>br/com/codegroup/PortfolioManagerApplication*</exclude>
+                        <exclude>br/com/portfolio/constants/**</exclude>
+                        <exclude>br/com/portfolio/config/**</exclude>
+                        <exclude>br/com/portfolio/dto/**</exclude>
+                        <exclude>br/com/portfolio/mapper/**</exclude>
+                        <exclude>br/com/portfolio/controller/**</exclude>
+                        <exclude>br/com/portfolio/exception/**</exclude>
+                        <exclude>br/com/portfolio/PortfolioManagerApplication*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -169,7 +169,7 @@
                                 <rule>
                                     <element>CLASS</element>
                                     <includes>
-                                        <include>br/com/codegroup/service/*</include>
+                                        <include>br/com/portfolio/service/*</include>
                                     </includes>
                                     <limits>
                                         <limit>
